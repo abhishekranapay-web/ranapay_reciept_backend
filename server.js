@@ -23,8 +23,8 @@ app.use(
   cors({
     origin: [
       'http://localhost:8080',
-      'https://www.webfrysolution.com/',
-      'https://webfrysolution.com/',
+      'https://www.pavki.in',
+      'https://pavki.in',
     ],
     credentials: true,
   })
