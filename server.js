@@ -23,6 +23,8 @@ app.use(
   cors({
     origin: [
       'http://localhost:8080',
+      'http://localhost:8080',
+      'http://localhost:8082',
       'https://www.pavki.in',
       'https://pavki.in',
     ],
