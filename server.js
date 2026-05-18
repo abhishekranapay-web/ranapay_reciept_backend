@@ -19,18 +19,25 @@ connectDB();
 // Middleware
 // app.use(cors());
 
-app.use(
-  cors({
-    origin: [
-      'http://localhost:8080',
-      'http://localhost:8080',
-      'http://localhost:8082',
-      'https://www.pavki.in',
-      'https://pavki.in',
-    ],
-    credentials: true,
-  })
-);
+ 
+
+
+const corsOptions = {
+  origin: [
+    'http://localhost:8080',
+    'http://localhost:8082',
+    'https://www.pavki.in',
+    'https://pavki.in',
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 
 
@@ -39,7 +46,7 @@ app.use(morgan('dev'));
 
 
 
- 
+
 
 // Routes
 app.use('/api/receipts', receiptRoutes);
