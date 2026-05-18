@@ -17,9 +17,27 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors());
+// app.use(cors());
+
+app.use(
+  cors({
+    origin: [
+      'http://localhost:8080',
+      'https://www.webfrysolution.com/',
+      'https://webfrysolution.com/',
+    ],
+    credentials: true,
+  })
+);
+
+
+
 app.use(express.json());
 app.use(morgan('dev'));
+
+
+
+ 
 
 // Routes
 app.use('/api/receipts', receiptRoutes);
