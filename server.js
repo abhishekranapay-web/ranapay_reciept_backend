@@ -19,7 +19,7 @@ connectDB();
 // Middleware
 // app.use(cors());
 
- 
+
 
 
 const corsOptions = {
@@ -28,6 +28,9 @@ const corsOptions = {
     'http://localhost:8082',
     'https://www.pavki.in',
     'https://pavki.in',
+    'https://digitpay.in',
+    'https://www.digitpay.in',
+
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -37,7 +40,7 @@ const corsOptions = {
 
 
 app.use(cors(corsOptions));
- 
+
 
 
 app.use(express.json());
