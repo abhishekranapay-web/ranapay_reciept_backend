@@ -1,6 +1,7 @@
 const Receipt = require('../models/Receipt');
 const generateReceiptId = require('../utils/generateReceiptId');
 
+const parseReceiptFile = require('../utils/parseReceiptFile');
 
 
 // Create Receipt
@@ -43,6 +44,117 @@ const createReceipt = async (req, res) => {
     }
 };
 
+
+
+
+
+
+ 
+
+const bulkUploadReceipts = async (
+  req,
+  res
+) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'File is required',
+      });
+    }
+
+    const rows =
+      await parseReceiptFile(req.file);
+
+    if (!rows.length) {
+      return res.status(400).json({
+        success: false,
+        message: 'File is empty',
+      });
+    }
+
+    const validReceipts = [];
+    const invalidRows = [];
+
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+
+      try {
+        // REQUIRED VALIDATION
+        if (
+          !row.receiptNumber ||
+          !row.txnId ||
+          !row.customerName
+        ) {
+          invalidRows.push({
+            row: i + 1,
+            error:
+              'receiptNumber, txnId, customerName required',
+            data: row,
+          });
+
+          continue;
+        }
+
+        validReceipts.push({
+          ...row,
+
+          paymentStatus:
+            row.paymentStatus ||
+            'SUCCESS',
+
+          agencyName:
+            row.agencyName ||
+            'RANAPAY INDIA PRIVATE LIMITED',
+        });
+      } catch (err) {
+        invalidRows.push({
+          row: i + 1,
+          error: err.message,
+          data: row,
+        });
+      }
+    }
+
+    // INSERT VALID DATA
+    let inserted = [];
+
+    if (validReceipts.length) {
+      inserted =
+        await Receipt.insertMany(
+          validReceipts,
+          {
+            ordered: false,
+          }
+        );
+    }
+
+    return res.status(201).json({
+      success: true,
+
+      totalRows: rows.length,
+
+      insertedCount:
+        inserted.length,
+
+      failedCount:
+        invalidRows.length,
+
+      failedRows: invalidRows,
+
+      inserted,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message:
+        error.message ||
+        'Internal server error',
+    });
+  }
+};
+
+ 
 
 
 
@@ -179,5 +291,6 @@ module.exports = {
     getReceiptHistory,
     getSingleReceipt,
     deleteReceipt,
-    searchReceipts
+    searchReceipts,
+    bulkUploadReceipts
 };
