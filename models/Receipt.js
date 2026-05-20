@@ -7,20 +7,21 @@ const receiptSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-            trim: true,
+      trim: true,
     },
 
     txnId: {
       type: String,
       required: true,
-            trim: true,
+      unique: true,
+      trim: true,
     },
 
     agencyTransactionId: {
       type: String,
       required: true,
-            trim: true,
-                  trim: true,
+      unique: true,
+      trim: true,
     },
 
     billNumber: {
@@ -33,13 +34,13 @@ const receiptSchema = new mongoose.Schema(
     customerName: {
       type: String,
       required: true,
-            trim: true,
+      trim: true,
     },
 
     accountNumber: {
       type: String,
       required: true,
-            trim: true,
+      trim: true,
     },
 
     mobileNumber: {
