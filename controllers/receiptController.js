@@ -2,6 +2,9 @@ const Receipt = require('../models/Receipt');
 const generateReceiptId = require('../utils/generateReceiptId');
 
 const parseReceiptFile = require('../utils/parseReceiptFile');
+const {
+  toWords,
+} = require('number-to-words');
 
 
 // Create Receipt
@@ -91,6 +94,24 @@ const formatDate = (date) => {
 
   return `${yyyy}-${mm}-${dd}`;
 };
+
+
+
+
+
+// CONVERT AMOUNT TO WORDS
+
+const convertAmountToWords = (
+  amount
+) => {
+  if (!amount) return '';
+
+  return toWords(
+    Number(amount)
+  ).toUpperCase();
+};
+
+
 
 
 
@@ -293,6 +314,14 @@ const bulkUploadReceipts = async (
               row.paymentDate
             )
           );
+
+
+            row.amountPaidWords =
+            convertAmountToWords(
+              row.amountPaid
+            );
+
+            
 
 
           
