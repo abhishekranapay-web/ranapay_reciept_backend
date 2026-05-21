@@ -49,6 +49,49 @@ const createReceipt = async (req, res) => {
 
 
 
+const excelDateToJSDate = (
+  excelDate
+) => {
+  if (
+    !excelDate ||
+    typeof excelDate !== 'number'
+  ) {
+    return excelDate;
+  }
+
+  const excelEpoch =
+    new Date(1899, 11, 30);
+
+  return new Date(
+    excelEpoch.getTime() +
+      excelDate *
+        24 *
+        60 *
+        60 *
+        1000
+  );
+};
+
+
+const formatDate = (date) => {
+  if (!date) return null;
+
+  const d = new Date(date);
+
+  const yyyy =
+    d.getFullYear();
+
+  const mm = String(
+    d.getMonth() + 1
+  ).padStart(2, '0');
+
+  const dd = String(
+    d.getDate()
+  ).padStart(2, '0');
+
+  return `${yyyy}-${mm}-${dd}`;
+};
+
 
 
 const bulkUploadReceipts = async (
@@ -84,9 +127,175 @@ const bulkUploadReceipts = async (
 
 
     for (let i = 0; i < rows.length; i++) {
-      const row = rows[i];
+      // const row = rows[i];
 
       try {
+
+
+
+           const rawRow = rows[i];
+
+        // ========================================
+        // NORMALIZE ROW
+        // ========================================
+        const row = {
+          txnId:
+            rawRow.txnId ||
+            rawRow['Txn Id'] ||
+            rawRow['TXN ID'] ||
+            '',
+
+          agencyTransactionId:
+            rawRow.agencyTransactionId ||
+            rawRow[
+              'Agency Transaction Id'
+            ] ||
+            '',
+
+          billNumber:
+            rawRow.billNumber ||
+            rawRow[
+              'Bill Number'
+            ] ||
+            '',
+
+          customerName:
+            rawRow.customerName ||
+            rawRow[
+              'Customer Name'
+            ] ||
+            '',
+
+          accountNumber:
+            rawRow.accountNumber ||
+            rawRow[
+              'Account Number'
+            ] ||
+            '',
+
+          mobileNumber:
+            rawRow.mobileNumber ||
+            rawRow[
+              'Mobile Number'
+            ] ||
+            '',
+
+          totalPayableAmount:
+            rawRow.totalPayableAmount ||
+            rawRow[
+              'Total Payable Amount'
+            ] ||
+            0,
+
+          amountPaid:
+            rawRow.amountPaid ||
+            rawRow[
+              'Amount Paid'
+            ] ||
+            0,
+
+          amountPaidWords:
+            rawRow.amountPaidWords ||
+            rawRow[
+              'Amount Paid Words'
+            ] ||
+            '',
+
+          connectionType:
+            rawRow.connectionType ||
+            rawRow[
+              'Connection Type'
+            ] ||
+            '',
+
+          discom:
+            rawRow.discom ||
+            rawRow[
+              'Discom'
+            ] ||
+            '',
+
+          area:
+            rawRow.area ||
+            rawRow['Area'] ||
+            '',
+
+          division:
+            rawRow.division ||
+            rawRow[
+              'Division'
+            ] ||
+            '',
+
+          agentName:
+            rawRow.agentName ||
+            rawRow[
+              'Agent Name'
+            ] ||
+            '',
+
+          agentMobile:
+            rawRow.agentMobile ||
+            rawRow[
+              'Agent Mobile'
+            ] ||
+            '',
+
+          agentId:
+            rawRow.agentId ||
+            rawRow[
+              'Agent Id'
+            ] ||
+            '',
+
+          transactionStatus:
+            rawRow.transactionStatus ||
+            rawRow[
+              'Transaction Status'
+            ] ||
+            'SUCCESS',
+
+          paymentDate:
+            rawRow.paymentDate ||
+            rawRow[
+              'Payment Date'
+            ] ||
+            '',
+
+          paymentMode:
+            rawRow.paymentMode ||
+            rawRow[
+              'Payment Mode'
+            ] ||
+            '',
+
+          agencyName:
+            rawRow.agencyName ||
+            rawRow[
+              'Agency Name'
+            ] ||
+            'RANAPAY INDIA PRIVATE LIMITED',
+
+          paymentStatus:
+            rawRow.paymentStatus ||
+            rawRow[
+              'Payment Status'
+            ] ||
+            'SUCCESS',
+        };
+
+        // ========================================
+        // CONVERT EXCEL DATE
+        // ========================================
+        row.paymentDate =
+          formatDate(
+            excelDateToJSDate(
+              row.paymentDate
+            )
+          );
+
+
+          
         // REQUIRED VALIDATION
         if (
 
